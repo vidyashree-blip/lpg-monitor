@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - LPG Monitor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta http-equiv="refresh" content="10">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <h2>🔥 LPG Monitor</h2>
+        <span>Welcome, {{ name }} &nbsp;|&nbsp;
+            <a href="/logout">Logout</a>
+        </span>
+    </div>
+
+    <!-- Status Card -->
+    {% if status == "DANGER" %}
+    <div class="status-card danger">
+        <h1>🚨 GAS LEAK DETECTED!</h1>
+        <p>Evacuate immediately and turn off the cylinder!</p>
+        <h2>PPM Level: {{ ppm }}</h2>
+    </div>
+    {% elif status == "WARNING" %}
+    <div class="status-card warning">
+        <h1>⚠️ High Gas Level!</h1>
+        <p>Check surroundings and open windows.</p>
+        <h2>PPM Level: {{ ppm }}</h2>
+    </div>
+    {% else %}
+    <div class="status-card safe">
+        <h1>✅ Gas Level Normal</h1>
+        <p>Everything is safe.</p>
+        <h2>PPM Level: {{ ppm }}</h2>
+    </div>
+    {% endif %}
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+
+        <div class="stat-box">
+            <h3>⚖️ Gas Remaining</h3>
+            <h2>{{ weight_kg }} kg</h2>
+            <div class="bar-bg">
+                <div class="bar-fill" style="width: {{ percent }}%"></div>
+            </div>
+            <p>{{ percent }}% remaining</p>
+        </div>
+
+        <div class="stat-box">
+            <h3>📊 PPM Level</h3>
+            <h2>{{ ppm }}</h2>
+            <p>Safe limit: below 500 PPM</p>
+        </div>
+
+        <div class="stat-box">
+            <h3>🔄 Auto Refresh</h3>
+            <h2>Every 10s</h2>
+            <p>Page updates automatically</p>
+        </div>
+
+    </div>
+
+    <!-- Recent Readings Table -->
+    <div class="alerts-section">
+        <h3>🕒 Recent Readings</h3>
+        <table>
+            <tr>
+                <th>Time</th>
+                <th>PPM</th>
+                <th>Weight</th>
+                <th>Status</th>
+            </tr>
+            {% for a in alerts %}
+            <tr>
+                <td>{{ a.timestamp }}</td>
+                <td>{{ a.ppm }}</td>
+                <td>{{ a.weight_kg }} kg</td>
+                <td>{{ a.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

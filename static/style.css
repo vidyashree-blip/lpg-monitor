@@ -1,0 +1,46 @@
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+body { background: #0f172a; color: white; min-height: 100vh; }
+
+/* HOME */
+.hero { text-align: center; padding: 80px 20px; }
+.hero h1 { font-size: 3em; color: #f97316; margin-bottom: 15px; }
+.hero p  { font-size: 1.2em; color: #94a3b8; margin-bottom: 40px; }
+.buttons { display: flex; gap: 20px; justify-content: center; margin-bottom: 60px; }
+.btn-primary  { background: #f97316; color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-size: 1.1em; }
+.btn-secondary{ background: transparent; color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-size: 1.1em; border: 2px solid white; }
+.features { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.card { background: #1e293b; padding: 30px; border-radius: 12px; width: 250px; }
+.card h3 { color: #f97316; margin-bottom: 10px; }
+
+/* FORMS */
+.form-container { max-width: 420px; margin: 80px auto; background: #1e293b; padding: 40px; border-radius: 16px; }
+.form-container h2 { margin-bottom: 25px; color: #f97316; }
+.form-container input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 1em; }
+.form-container button { width: 100%; padding: 14px; background: #f97316; color: white; border: none; border-radius: 8px; font-size: 1.1em; cursor: pointer; }
+.form-container p { margin-top: 15px; color: #94a3b8; text-align: center; }
+.form-container a { color: #f97316; }
+.error { color: #ef4444; margin-bottom: 15px; }
+
+/* DASHBOARD */
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: #1e293b; }
+.topbar h2 { color: #f97316; }
+.topbar a  { color: #f97316; }
+.status-card { text-align: center; padding: 40px; margin: 20px; border-radius: 16px; }
+.status-card.safe    { background: #064e3b; }
+.status-card.warning { background: #78350f; }
+.status-card.danger  { background: #7f1d1d; animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.stats-row { display: flex; gap: 20px; padding: 0 20px; flex-wrap: wrap; }
+.stat-box  { background: #1e293b; padding: 25px; border-radius: 12px; flex: 1; min-width: 200px; }
+.stat-box h3 { color: #94a3b8; margin-bottom: 10px; }
+.stat-box h2 { font-size: 2em; color: #f97316; margin-bottom: 10px; }
+.bar-bg   { background: #334155; border-radius: 8px; height: 12px; margin: 10px 0; }
+.bar-fill { background: #f97316; height: 12px; border-radius: 8px; }
+.alerts-section { margin: 20px; background: #1e293b; border-radius: 12px; padding: 25px; }
+.alerts-section h3 { margin-bottom: 15px; color: #f97316; }
+table { width: 100%; border-collapse: collapse; }
+th { background: #334155; padding: 12px; text-align: left; }
+td { padding: 12px; border-bottom: 1px solid #334155; }
+tr.danger  td { color: #ef4444; }
+tr.warning td { color: #f59e0b; }
+tr.safe    td { color: #10b981; }

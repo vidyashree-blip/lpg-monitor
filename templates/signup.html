@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up - LPG Monitor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>📝 Create Account</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="POST" action="/signup">
+            <input type="text"     name="name"
+                   placeholder="Your Full Name" required>
+            <input type="email"    name="email"
+                   placeholder="Email Address" required>
+            <input type="password" name="password"
+                   placeholder="Password" required>
+            <input type="text"     name="device_id"
+                   placeholder="Device ID (type: DEVICE-001)" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <p>Already have account? <a href="/login">Login here</a></p>
+    </div>
+</body>
+</html>
