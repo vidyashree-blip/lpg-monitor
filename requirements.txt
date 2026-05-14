@@ -1,0 +1,12 @@
+flask
+flask-sqlalchemy
+flask-bcrypt
+flask-login
+requests
+schedule
+python-dotenv
+pyserial
+pandas
+numpy
+scikit-learn
+gunicorn 
