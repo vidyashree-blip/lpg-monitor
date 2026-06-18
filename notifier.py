@@ -3,10 +3,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Your email settings
-SENDER_EMAIL    = "varshagowdavidyashree@gmail.com"      # Your Gmail
-APP_PASSWORD    = "mfvy rdfx mmmb ixkq" # 16-digit app password
-RECEIVER_EMAIL  = "vidyashree35616@gmail.com"      # Where alert goes (can be same)
-
+import os
+SENDER_EMAIL   = os.environ.get("SENDER_EMAIL")
+APP_PASSWORD   = os.environ.get("APP_PASSWORD")
+RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL")
 def send_email_alert(subject, message):
     try:
         msg = MIMEMultipart()
