@@ -3,9 +3,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Your email settings
-SENDER_EMAIL    = "your@gmail.com"      # Your Gmail
-APP_PASSWORD    = "xxxx xxxx xxxx xxxx" # 16-digit app password
-RECEIVER_EMAIL  = "your@gmail.com"      # Where alert goes (can be same)
+SENDER_EMAIL    = "varshagowdavidyashree@gmail.com"      # Your Gmail
+APP_PASSWORD    = "mfvy rdfx mmmb ixkq" # 16-digit app password
+RECEIVER_EMAIL  = "vidyashree35616@gmail.com"      # Where alert goes (can be same)
 
 def send_email_alert(subject, message):
     try:
