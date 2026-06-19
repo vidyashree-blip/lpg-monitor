@@ -1,9 +1,9 @@
 import os
+import random
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from datetime import datetime
-import random
 
 app = Flask(__name__)
 app.secret_key = "lpg_secret_key_2026"
@@ -72,39 +72,22 @@ def dashboard():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    device_id = session["device_id"]
-
-    # Get latest real reading from database
-    latest = Reading.query.filter_by(device_id="ESP32-001")
+    # Get latest real reading from ESP32
+    latest = Reading.query.filter_by(device_id="ESP32-001")\
+             .order_by(Reading.id.desc()).first()
 
     if latest:
         ppm       = latest.ppm
         weight_kg = latest.weight_kg
         status    = latest.status
     else:
-        # Simulate if no real data yet
-        ppm       = random.randint(100, 1200)
-        weight_kg = round(random.uniform(2.0, 14.2), 2)
-        if ppm >= 1000:
-            status = "DANGER"
-        elif ppm >= 500:
-            status = "WARNING"
-        else:
-            status = "SAFE"
+        ppm       = 0.0
+        weight_kg = 0.0
+        status    = "SAFE"
 
-        reading = Reading(
-            device_id = device_id,
-            timestamp = datetime.now().strftime("%d %b %Y %I:%M %p"),
-            ppm       = ppm,
-            weight_kg = weight_kg,
-            status    = status
-        )
-        db.session.add(reading)
-        db.session.commit()
+    percent = round((weight_kg / 14.2) * 100) if weight_kg > 0 else 0
 
-    percent = round((weight_kg / 14.2) * 100)
-
-    alerts = Reading.query.filter_by(device_id=device_id)\
+    alerts = Reading.query.filter_by(device_id="ESP32-001")\
              .order_by(Reading.id.desc()).limit(5).all()
 
     return render_template("dashboard.html",
@@ -145,7 +128,7 @@ def receive_sensor_data():
     db.session.commit()
 
     return jsonify({
-        "status": "ok",
+        "status"    : "ok",
         "ppm"       : ppm,
         "weight_kg" : weight_kg,
         "alert"     : result["status"]
@@ -155,6 +138,5 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
         print("Website database ready.")
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
