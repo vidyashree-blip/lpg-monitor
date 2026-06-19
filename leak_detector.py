@@ -14,20 +14,8 @@ def detect_leak(ppm):
         print(f"Email error: {e}")
 
     if ppm >= DANGER_LEVEL:
-        return {
-            "status": "DANGER",
-            "message": f"GAS LEAK! PPM: {ppm} - Evacuate immediately!",
-            "alert": True
-        }
+        return {"status": "DANGER", "alert": True}
     elif ppm >= WARNING_LEVEL:
-        return {
-            "status": "WARNING",
-            "message": f"High gas level! PPM: {ppm}",
-            "alert": True
-        }
+        return {"status": "WARNING", "alert": True}
     else:
-        return {
-            "status": "SAFE",
-            "message": f"Gas level normal. PPM: {ppm}",
-            "alert": False
-        }
+        return {"status": "SAFE", "alert": False}

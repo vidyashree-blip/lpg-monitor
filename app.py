@@ -13,7 +13,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-# --- Database Models ---
 class User(db.Model):
     id        = db.Column(db.Integer, primary_key=True)
     name      = db.Column(db.String(100))
@@ -29,7 +28,6 @@ class Reading(db.Model):
     weight_kg = db.Column(db.Float)
     status    = db.Column(db.String(20))
 
-# --- Routes ---
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -41,11 +39,9 @@ def signup():
         email     = request.form["email"]
         password  = bcrypt.generate_password_hash(request.form["password"]).decode("utf-8")
         device_id = request.form["device_id"]
-
-        existing = User.query.filter_by(email=email).first()
+        existing  = User.query.filter_by(email=email).first()
         if existing:
             return render_template("signup.html", error="Email already registered!")
-
         user = User(name=name, email=email, password=password, device_id=device_id)
         db.session.add(user)
         db.session.commit()
@@ -58,7 +54,6 @@ def login():
         email    = request.form["email"]
         password = request.form["password"]
         user     = User.query.filter_by(email=email).first()
-
         if user and bcrypt.check_password_hash(user.password, password):
             session["user_id"]   = user.id
             session["user_name"] = user.name
@@ -72,7 +67,6 @@ def dashboard():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    # Get latest real reading from ESP32
     latest = Reading.query.filter_by(device_id="ESP32-001")\
              .order_by(Reading.id.desc()).first()
 
@@ -106,33 +100,41 @@ def logout():
 
 @app.route("/api/sensor-data", methods=["POST"])
 def receive_sensor_data():
-    from leak_detector import detect_leak
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data"}), 400
 
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "No data"}), 400
+        ppm       = float(data.get("ppm", 0))
+        weight_kg = float(data.get("weight_kg", 0))
 
-    ppm       = float(data.get("ppm", 0))
-    weight_kg = float(data.get("weight_kg", 0))
+        if ppm >= 550:
+            status = "DANGER"
+        elif ppm >= 400:
+            status = "WARNING"
+        else:
+            status = "SAFE"
 
-    result = detect_leak(ppm)
+        reading = Reading(
+            device_id = "ESP32-001",
+            timestamp = datetime.now().strftime("%d %b %Y %I:%M %p"),
+            ppm       = ppm,
+            weight_kg = weight_kg,
+            status    = status
+        )
+        db.session.add(reading)
+        db.session.commit()
 
-    reading = Reading(
-        device_id = "ESP32-001",
-        timestamp = datetime.now().strftime("%d %b %Y %I:%M %p"),
-        ppm       = ppm,
-        weight_kg = weight_kg,
-        status    = result["status"]
-    )
-    db.session.add(reading)
-    db.session.commit()
+        return jsonify({
+            "status"    : "ok",
+            "ppm"       : ppm,
+            "weight_kg" : weight_kg,
+            "alert"     : status
+        }), 200
 
-    return jsonify({
-        "status"    : "ok",
-        "ppm"       : ppm,
-        "weight_kg" : weight_kg,
-        "alert"     : result["status"]
-    }), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     with app.app_context():
