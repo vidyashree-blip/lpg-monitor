@@ -35,7 +35,7 @@ def read_esp32():
 
                 if "Gas Value:" in line:
                     gas_raw = float(line.split("Gas Value:")[1].strip())
-                    ppm = round((gas_raw / 4095) * 1200, 2)
+                    ppm = round(gas_raw, 2)
                     weight_kg = 0.0
 
                     print(f"PPM: {ppm} | Weight: {weight_kg} kg")

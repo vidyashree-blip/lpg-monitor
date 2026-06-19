@@ -1,8 +1,8 @@
 from notifier import send_email_alert
 
 SAFE_LEVEL    = 200
-WARNING_LEVEL = 500
-DANGER_LEVEL  = 1000
+WARNING_LEVEL = 400
+DANGER_LEVEL  = 550
 
 def detect_leak(ppm):
     if ppm >= DANGER_LEVEL:
