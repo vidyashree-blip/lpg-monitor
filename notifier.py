@@ -1,13 +1,26 @@
 import smtplib
+import os
+import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# Your email settings
-import os
+# Email settings
 SENDER_EMAIL   = os.environ.get("SENDER_EMAIL")
 APP_PASSWORD   = os.environ.get("APP_PASSWORD")
 RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL")
+
+# Cooldown to avoid spam (5 minutes)
+last_alert_time = 0
+ALERT_COOLDOWN  = 300
+
 def send_email_alert(subject, message):
+    global last_alert_time
+
+    current_time = time.time()
+    if current_time - last_alert_time < ALERT_COOLDOWN:
+        print("Cooldown active - email not sent")
+        return
+
     try:
         msg = MIMEMultipart()
         msg["From"]    = SENDER_EMAIL
@@ -20,13 +33,9 @@ def send_email_alert(subject, message):
         server.login(SENDER_EMAIL, APP_PASSWORD)
         server.send_message(msg)
         server.quit()
-        print("📧 Email alert sent!")
+
+        last_alert_time = current_time
+        print("Email alert sent!")
+
     except Exception as e:
         print(f"Email error: {e}")
-
-def send_telegram_alert(message):
-    # Routes to email instead
-    if "LEAK" in message or "WARNING" in message:
-        send_email_alert("🚨 LPG Gas Alert!", message)
-    else:
-        print(f"[LOG]: {message}")
