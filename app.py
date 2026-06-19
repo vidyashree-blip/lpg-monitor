@@ -75,8 +75,7 @@ def dashboard():
     device_id = session["device_id"]
 
     # Get latest real reading from database
-    latest = Reading.query.filter_by(device_id=device_id)\
-             .order_by(Reading.id.desc()).first()
+    latest = Reading.query.filter_by(device_id="ESP32-001")
 
     if latest:
         ppm       = latest.ppm
